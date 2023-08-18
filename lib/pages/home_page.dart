@@ -75,7 +75,11 @@ class _HomePageState extends State<HomePage> {
         ),
         const SizedBox(height: 16),
         CarouselSlider(
-        options: CarouselOptions(height: 400.0),
+        options: CarouselOptions(
+          height: 400.0, 
+          autoPlay: true, 
+          autoPlayInterval: const Duration(seconds: 5)
+        ),
         items: movies.map((path) {
           return Builder(
             builder: (BuildContext context) {
