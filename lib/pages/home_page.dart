@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-enum Theme { light, dark }
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,7 +10,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Theme? selectedTheme;
+  late SharedPreferences prefs;
+  String? currentTheme;
+
+  Future<void> initializeSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      currentTheme = prefs.getString("Theme");
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initializeSharedPreferences();
+  }
+
+  final List<String> movies = [
+    'assets/movie_1.jpg',
+    'assets/movie_2.jpg',
+    'assets/movie_3.jpg',
+    'assets/movie_4.jpg',
+    'assets/movie_5.jpg'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -26,27 +49,51 @@ class _HomePageState extends State<HomePage> {
                 fontWeight: FontWeight.bold
               ),
             ),
-            PopupMenuButton<Theme>(
-              initialValue: selectedTheme,
-              onSelected: (Theme item) {
+            PopupMenuButton<String>(
+              initialValue: currentTheme,
+              onSelected: (String theme) {
+                prefs.setString('Theme', theme);
                 setState(() {
-                  selectedTheme = item;
+                  currentTheme = theme;
                 });
               },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<Theme>>[
-                const PopupMenuItem<Theme>(
-                  value: Theme.light,
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'Light',
                   child: Text('Light'),
                 ),
-                const PopupMenuItem<Theme>(
-                  value: Theme.dark,
+                const PopupMenuItem<String>(
+                  value: 'Dark',
                   child: Text('Dark'),
                 ),
               ],
             ),
           ],
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 56),
+        const Text(
+          "Popular Movies",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 24
+          ),
+        ),
+        const SizedBox(height: 16),
+        CarouselSlider(
+        options: CarouselOptions(height: 400.0),
+        items: movies.map((path) {
+          return Builder(
+            builder: (BuildContext context) {
+              return
+                Image.asset(
+                  path,
+                  width: double.infinity,
+                );
+            },
+          );
+        }).toList(),
+      ),
+        const SizedBox(height: 56),
         const Text(
           "About Us",
           style: TextStyle(
@@ -61,7 +108,7 @@ class _HomePageState extends State<HomePage> {
         ),
         const SizedBox(height: 16),
         const Text(
-          "StucKC in the Movie is a movbie theatre based in Indonesia, we provide movie the traditional movie theatre experience.",
+          "StucKC in the Movie is a movie theatre based in Indonesia, we provide movie the traditional movie theatre experience.",
           textAlign: TextAlign.center,
         ),
       ]
