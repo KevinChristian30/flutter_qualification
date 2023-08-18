@@ -58,14 +58,43 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 Text(
                   movie?.description ?? '',
                 ),
-                const SizedBox(height: 32),
                 Text(
                   'Price: ${movie?.price ?? ''}',
                 ),
                 const SizedBox(height: 32),
               ],
             ),
-            Icon(Icons.directions_transit),
+            ListView(
+              padding: const EdgeInsets.all(8),
+              shrinkWrap: true,
+              children: movie!.comments.map((comment) {
+                return Container(
+                  margin: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(16),
+                  color: Colors.blue,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        comment.commenterEmail,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        comment.content,
+                        style: const TextStyle(
+                          color: Colors.white
+                        ),
+                      ),
+                    ],
+                  )
+                );
+              }).toList(),
+            )
           ],
         ),
       ),
