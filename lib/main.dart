@@ -1,35 +1,40 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 // import 'package:flutter_qualification/pages/login_page.dart';
 import 'package:flutter_qualification/pages/main_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> main(List<String> args) async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  String theme = prefs.getString('Theme') ?? 'Light';
-  prefs.setString('Theme', theme);
-
-  runApp(Main(
-    prefs: prefs,
-  ));
+void main(List<String> args) {
+  runApp(const Main());
 }
 
-// ignore: must_be_immutable
-class Main extends StatelessWidget {
-  SharedPreferences prefs;
-  Main({super.key, required this.prefs});
-  
+class Main extends StatefulWidget {
+  const Main({super.key});
+
+  @override
+  State<Main> createState() => MainState();
+
+  static MainState of(BuildContext context) {
+    return context.findAncestorStateOfType<MainState>()!;
+  }
+}
+
+class MainState extends State<Main> {
+  ThemeMode _themeMode = ThemeMode.light;
+
+  void setTheme(String theme) {
+    setState(() {
+      _themeMode = theme == 'Light' ? ThemeMode.light : ThemeMode.dark;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      key: Key(prefs.getString("Theme") ?? 'Light'),
       title: "StucKC in the Movie",
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      themeMode: prefs.getString("Theme") == 'Light' ? ThemeMode.light : ThemeMode.dark,
       home: MainPage(email: 'kevinchristian@gmail.com'),
+      themeMode: _themeMode,
     );
   }
 }

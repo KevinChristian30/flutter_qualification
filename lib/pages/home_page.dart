@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_qualification/main.dart';
 import 'package:flutter_qualification/models/movie_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -11,22 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late SharedPreferences prefs;
   String? currentTheme;
-
-  Future<void> initializeSharedPreferences() async {
-    prefs = await SharedPreferences.getInstance();
-
-    setState(() {
-      currentTheme = prefs.getString("Theme");
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initializeSharedPreferences();
-  }
 
   final List<String> movies = Movie.movies.map((movie) => movie.path).toList();
 
@@ -47,7 +33,8 @@ class _HomePageState extends State<HomePage> {
             PopupMenuButton<String>(
               initialValue: currentTheme,
               onSelected: (String theme) {
-                prefs.setString('Theme', theme);
+                Main.of(context).setTheme(theme);
+                
                 setState(() {
                   currentTheme = theme;
                 });
