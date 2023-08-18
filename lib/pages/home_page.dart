@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_qualification/models/movie_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -27,13 +28,7 @@ class _HomePageState extends State<HomePage> {
     initializeSharedPreferences();
   }
 
-  final List<String> movies = [
-    'assets/movie_1.jpg',
-    'assets/movie_2.jpg',
-    'assets/movie_3.jpg',
-    'assets/movie_4.jpg',
-    'assets/movie_5.jpg'
-  ];
+  final List<String> movies = Movie.movies.map((movie) => movie.path).toList();
 
   @override
   Widget build(BuildContext context) {
