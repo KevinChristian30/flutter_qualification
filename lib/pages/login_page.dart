@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_qualification/pages/home_page.dart';
+import 'package:flutter_qualification/models/user_model.dart';
+// import 'package:flutter_qualification/pages/home_page.dart';
 import 'package:flutter_qualification/pages/main_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -58,6 +59,15 @@ class _LoginPageState extends State<LoginPage> {
         passwordErrorMessage = "Password can't be empty";
       });
 
+      return;
+    }
+
+    if (!User.isValidCredentials(email, password)) {
+      const snackBar = SnackBar(
+        content: Text('Invalid Credentials'),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
       return;
     }
 

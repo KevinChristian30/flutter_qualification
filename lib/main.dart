@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_qualification/models/user_model.dart';
 // import 'package:flutter_qualification/pages/login_page.dart';
 import 'package:flutter_qualification/pages/main_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +10,7 @@ Future<void> main(List<String> args) async {
 
   String theme = prefs.getString('Theme') ?? 'Light';
   prefs.setString('Theme', theme);
+
   runApp(Main(
     prefs: prefs,
   ));
