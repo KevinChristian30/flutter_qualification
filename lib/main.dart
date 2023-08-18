@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_qualification/pages/login_page.dart';
-import 'package:flutter_qualification/pages/main_page.dart';
+import 'package:flutter_qualification/pages/login_page.dart';
 
 void main(List<String> args) {
   runApp(const Main());
@@ -33,7 +32,7 @@ class MainState extends State<Main> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      home: MainPage(email: 'kevinchristian@gmail.com'),
+      home: const LoginPage(),
       themeMode: _themeMode,
     );
   }
