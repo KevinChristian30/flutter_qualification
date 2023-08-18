@@ -56,4 +56,12 @@ class Movie {
           ]    
       )
   ];
+
+  static Movie? findByTitle(String title) {
+    for (Movie movie in movies) {
+      if (movie.title == title) return movie;
+    }
+
+    return null;
+  }
 }
