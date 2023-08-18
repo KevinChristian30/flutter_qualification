@@ -8,8 +8,6 @@ class MoviesPage extends StatefulWidget {
 }
 
 class _HomePageState extends State<MoviesPage> {
-  
-
   @override
   Widget build(BuildContext context) {
 
