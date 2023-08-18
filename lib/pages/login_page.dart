@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification/models/user_model.dart';
-// import 'package:flutter_qualification/pages/home_page.dart';
 import 'package:flutter_qualification/pages/main_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,6 +16,8 @@ class _LoginPageState extends State<LoginPage> {
 
   String? emailErrorMessage;
   String? passwordErrorMessage;
+
+  SharedPreferences? prefs;
 
   void resetErrorMessage() {
     setState(() {
@@ -71,10 +73,23 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
+    prefs?.setString("currentUserEmail", email);
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => MainPage(email: email)),
     );
+  }
+
+  void intializeSharedPreference() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    
+    intializeSharedPreference();
   }
 
   @override

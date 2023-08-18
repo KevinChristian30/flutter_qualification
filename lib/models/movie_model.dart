@@ -64,4 +64,8 @@ class Movie {
 
     return null;
   }
+
+  void addComment(Comment comment) {
+    comments.add(comment);
+  }
 }

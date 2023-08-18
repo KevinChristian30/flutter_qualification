@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_qualification/models/comment_model.dart';
 import 'package:flutter_qualification/models/movie_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class MovieDetailPage extends StatefulWidget {
@@ -13,6 +15,42 @@ class MovieDetailPage extends StatefulWidget {
 
 class _MovieDetailPageState extends State<MovieDetailPage> {
   Movie? movie;
+  TextEditingController commentController = TextEditingController();
+
+  SharedPreferences? prefs;
+
+  void resetFormValues() {
+    commentController.text = '';
+  }
+
+  void handleAddComment() {
+    String comment = commentController.text;
+
+    if (comment.length <= 5 || comment.length >= 30) {
+      const snackBar = SnackBar(
+        content: Text('Comment length must be between 5 and 30 characters long'),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      return;
+    }
+
+    setState(() {
+      movie?.addComment(Comment(prefs!.getString('currentUserEmail') ?? 'kevin@gmail.com', comment));
+    });
+
+    const snackBar = SnackBar(
+      content: Text('Comment Added'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    resetFormValues();
+  }
+
+  void intializeSharedPreference() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
   @override
   void initState() {
@@ -20,6 +58,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     movie = Movie.findByTitle(widget.title);
 
     if (movie == null) Navigator.pop(context);
+
+    intializeSharedPreference();
   }
 
   @override
@@ -38,31 +78,49 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         ),
         body: TabBarView(
           children: [
-            Column(
-              children: [
-                const SizedBox(height: 32),
-                Image.asset(
-                  movie?.path ?? '',
-                  width: 250,
-                  height: 250,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  movie?.title ?? '',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20
+            Container(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  const SizedBox(height: 32),
+                  Image.asset(
+                    movie?.path ?? '',
+                    width: 250,
+                    height: 250,
                   ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  movie?.description ?? '',
-                ),
-                Text(
-                  'Price: ${movie?.price ?? ''}',
-                ),
-                const SizedBox(height: 32),
-              ],
+                  const SizedBox(height: 16),
+                  Text(
+                    movie?.title ?? '',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    movie?.description ?? '',
+                  ),
+                  Text(
+                    'Price: ${movie?.price ?? ''}',
+                  ),
+                  const SizedBox(height: 64),
+                  TextField(
+                    controller: commentController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Add a Comment',
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {handleAddComment();}, 
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                    ),
+                    child: const Text("Add Comment"),
+                  ),
+                ],
+              ),
             ),
             ListView(
               padding: const EdgeInsets.all(8),
